@@ -1,0 +1,19 @@
+---
+- name: Provisioner for  CloudFormation
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+  
+  - name: Launch Ansible CloudFormation Stack
+    cloudformation:
+      aws_access_key: "{{ AWS_ACCESS_KEY_ID }}"
+      aws_secret_key: "{{ AWS_SECRET_ACCESS_KEY }}"
+      stack_name: "DevOps301"
+      state: "present"
+      region: "us-west-2"
+      disable_rollback: true
+      template: "files/aws_cloudformation.json"
+      tags:
+        Name: "ansible-cloudformation"

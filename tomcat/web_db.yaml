@@ -1,0 +1,33 @@
+---
+- hosts: webserver
+  sudo: yes
+  vars:
+    http_port: 80
+    doc_dir: /ansible
+    doc_root: /root/
+    max_clients: 5
+  tasks:
+  - name: Ensure that is install
+    yum: name=httpd state=present
+    when: ansible_os_family == "RedHat"
+
+  - name: Start Apache
+    service: name=httpd enabled=yes state=started
+
+  - name: Stop Iptables
+    service: name=firewalld state=stopped
+   
+  - name: Deploy configuration file
+    copy:
+      src: inventory
+      dest: /root/
+    notify:
+     - Restar Apache
+  - name: Copy Site Files
+    copy: 
+      src: inventory 
+      dest: /root/
+  handlers:
+  - name: Restart Apache
+    service: name=httpd state=restarted  
+         
